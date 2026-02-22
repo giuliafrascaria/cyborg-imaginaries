@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyborg Imaginaries — Interactive Framework</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,400&family=Source+Serif+4:ital,wght@0,400;1,400&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Source Sans 3', sans-serif;
+    background: #fafaf8;
+    color: #1a1a1a;
+    min-height: 100vh;
+  }
+
+  .header {
+    text-align: center;
+    padding: 32px 24px 18px;
+    border-bottom: 1px solid #e0e0dc;
+  }
+
+  .header h1 {
+    font-size: 24px;
+    font-weight: 300;
+    margin-bottom: 6px;
+  }
+
+  .header h1 b { font-weight: 600; }
+
+  .header p {
+    font-size: 13px;
+    color: #666;
+    max-width: 620px;
+    margin: 0 auto;
+    line-height: 1.55;
+  }
+
+  .main {
+    display: flex;
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px;
+    gap: 20px;
+  }
+
+  @media (max-width: 860px) {
+    .main { flex-direction: column; }
+    .detail { max-width: none !important; }
+  }
+
+  /* === PLANE === */
+  .plane-wrap { flex: 1; min-width: 0; }
+
+  .plane {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 520px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #d8d8d4;
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .plane .axis-v { position: absolute; top: 0; bottom: 0; left: 50%; width: 1px; background: #d8d8d4; }
+  .plane .axis-h { position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: #d8d8d4; }
+
+  .plane .q { position: absolute; width: 50%; height: 50%; }
+  .plane .q-tl { top: 0; left: 0; background: rgba(196,90,90,0.03); }
+  .plane .q-tr { top: 0; right: 0; background: rgba(59,158,122,0.03); }
+  .plane .q-bl { bottom: 0; left: 0; background: rgba(176,144,80,0.03); }
+  .plane .q-br { bottom: 0; right: 0; background: rgba(90,160,90,0.03); }
+
+  .ax-label {
+    position: absolute;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+  }
+  .ax-top { top: 8px; left: 50%; transform: translateX(-50%); color: #5a6eaa; }
+  .ax-bot { bottom: 8px; left: 50%; transform: translateX(-50%); color: #aa8a3a; }
+  .ax-left { left: 6px; top: 50%; transform: translateY(-50%) rotate(-90deg); color: #aa4a4a; }
+  .ax-right { right: 6px; top: 50%; transform: translateY(-50%) rotate(90deg); color: #2a8a5a; }
+
+  /* Points */
+  .pt {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  .pt .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid rgba(255,255,255,0.6);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.06);
+  }
+
+  .pt.selected .dot {
+    width: 13px;
+    height: 13px;
+    border-color: #fff;
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.1), 0 0 12px rgba(0,0,0,0.08);
+  }
+
+  .pt.selected { z-index: 5; }
+
+  .pt .lbl {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-top: 5px;
+    font-size: 8.5px;
+    font-weight: 600;
+    color: #444;
+    white-space: nowrap;
+    text-align: center;
+    pointer-events: none;
+    display: none;
+  }
+
+  .pt.selected .lbl { display: block; color: #1a1a1a; font-size: 9px; }
+
+  /* === DETAIL === */
+  .detail {
+    width: 360px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid #e0e0dc;
+    border-radius: 6px;
+    padding: 16px;
+  }
+
+  .card.active-card { border-color: #888; }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+
+  .tag {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 9px;
+    border-radius: 20px;
+    border: 1px solid;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .tag-emancipatory { color: #2a8a5a; border-color: #2a8a5a; background: rgba(42,138,90,0.06); }
+  .tag-apocalyptic { color: #aa4a4a; border-color: #aa4a4a; background: rgba(170,74,74,0.06); }
+  .tag-inevitable { color: #5a6eaa; border-color: #5a6eaa; background: rgba(90,110,170,0.06); }
+  .tag-contingent { color: #aa8a3a; border-color: #aa8a3a; background: rgba(170,138,58,0.06); }
+
+  .main-quote {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.6;
+    color: #333;
+    padding: 10px 14px;
+    border-left: 2.5px solid #888;
+    background: #f7f7f5;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .dim-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.4px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dim-dot { width: 7px; height: 7px; border-radius: 2px; display: inline-block; }
+
+  .dim-text {
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: #555;
+    margin-bottom: 6px;
+  }
+
+  .dim-quote {
+    font-family: 'Source Serif 4', serif;
+    font-style: italic;
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: #777;
+    padding: 5px 10px;
+    border-left: 1.5px solid;
+    background: #fafaf8;
+    border-radius: 0 3px 3px 0;
+  }
+
+  .placeholder-text {
+    font-size: 13px;
+    color: #888;
+    line-height: 1.6;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    padding: 12px 0;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    color: #888;
+  }
+
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; }
+
+  .footer {
+    text-align: center;
+    font-size: 10.5px;
+    color: #999;
+    padding: 16px 24px 28px;
+    border-top: 1px solid #e0e0dc;
+    margin-top: 8px;
+    line-height: 1.6;
+    max-width: 680px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Interactive <b>Cyborg Imaginaries</b> Framework</h1>
+  <p>Select an imaginary to explore how foundational beliefs, technological objects, and implications position it within the two-axis framework.</p>
+</div>
+
+<div class="main">
+  <div class="plane-wrap">
+    <div class="plane" id="plane">
+      <div class="q q-tl"></div>
+      <div class="q q-tr"></div>
+      <div class="q q-bl"></div>
+      <div class="q q-br"></div>
+      <div class="axis-v"></div>
+      <div class="axis-h"></div>
+      <div class="ax-label ax-top">Inevitable</div>
+      <div class="ax-label ax-bot">Contingent</div>
+      <div class="ax-label ax-left">Apocalyptic</div>
+      <div class="ax-label ax-right">Emancipatory</div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#2a8a5a"></div>Emancipatory</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#aa4a4a"></div>Apocalyptic</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#5a6eaa"></div>Inevitable</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#aa8a3a"></div>Contingent</div>
+    </div>
+  </div>
+  <div class="detail" id="detail">
+    <div class="card">
+      <div class="placeholder-text">Click on a point to explore the underlying dimensions that position each imaginary within the framework.</div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Companion visualization for: Frascaria, Jaramillo-Dent &amp; Latzer — "Cyborg Imaginaries and AI"<br>
+  Positions reflect qualitative interpretation of community discourse.
+</div>
+
+<script>
+const data = [
+  {
+    id:"cognitive-expansion", label:"Cognitive Expansion", x:72, y:30,
+    tags:["emancipatory","inevitable"],
+    quote:"We could be thinking and talking about philosophies and sciences on conversational landscapes that are immeasurably more deep and sophisticated than our minds currently have the bandwidth to even comprehend.",
+    beliefs:{text:"Mechanistic view of the brain as computational hardware with bandwidth constraints amenable to upgrade.", quote:"The brain as well is more '2d' in sense that you can flatten the gray matter into a planar form."},
+    tech:{text:"Brain-computer interfaces, AI-enhanced neural decoders, cognitive augmentation systems.", quote:"AI-enhanced BCIs that decode 'sentences as a person thinks them' into audible speech."},
+    impl:{text:"Raises questions of cognitive liberty and equal access to enhanced cognition.", quote:"Transhumanists believe people should be equal and no one left behind because of lack of money or for any unfair reason."}
+  },
+  {
+    id:"superhuman", label:"Superhuman Abilities", x:80, y:22,
+    tags:["emancipatory","inevitable"],
+    quote:"With a BCI implant, a person will eventually gain what is essentially real world 'telekinetic' and 'telepathic' abilities, along with the ability to 'think things into existence.'",
+    beliefs:{text:"Human-technology continuum: machines as extension of being. Technology always advances.", quote:"A machine doesn't have to be perfect; it just has to be better."},
+    tech:{text:"BCI implants, neural interfaces, telekinetic and telepathic control systems.", quote:"EMG bracelets that track muscle signals as a 'fast and effortless' input method."},
+    impl:{text:"Framed as natural progression. Inevitability framing reduces perceived need for regulation.", quote:"The general course of technology is ALWAYS onward; you can't just 'not' engage in it."}
+  },
+  {
+    id:"hive-mind", label:"Hive Mind", x:65, y:18,
+    tags:["emancipatory","inevitable"],
+    quote:"Imagine if we were something like Borg. Sharing our minds with whole civilization. There couldn't be corruption nor single dictators... Privacy would be dead and no more wars.",
+    beliefs:{text:"Contested: some see individuality as sacred, others see collective consciousness as moral progress.", quote:"The 'ego' and 'individuality' are sacred; the 'Borg' hive-mind is detestable."},
+    tech:{text:"Advanced BCIs enabling mind-to-mind communication, networked neural architectures.", quote:"Neural decoders that decode 'sentences as a person thinks them' into audible speech."},
+    impl:{text:"Radical tension between collective benefit and individual rights.", quote:"We cannot force an extreme shift onto people nor can we consider classic homosapiens as second class citizens."}
+  },
+  {
+    id:"climate", label:"Climate Solutionism", x:75, y:38,
+    tags:["emancipatory","inevitable"],
+    quote:"Mankind will try to adapt, by regulating temperature conditions on our planet ourselves [...] conditions favourable to humans [...] are in the hands of the technological system.",
+    beliefs:{text:"Technological determinism applied to planetary systems. Human agency exercised through technology.", quote:"Man is not the master over technology, but rather, subject to it. It is technology that decides what happens."},
+    tech:{text:"Geoengineering, climate regulation systems, planetary-scale technological infrastructure.", quote:"At some point in the future, we will develop the ability to transfer our mind into computational matter."},
+    impl:{text:"Techno-solutionist framing positions governance as enabling rather than constraining.", quote:"Technology has always improved twice as fast in half the time it took for it to overcome its last hurdle."}
+  },
+  {
+    id:"immortality", label:"Digital Immortality", x:68, y:60,
+    tags:["emancipatory","contingent"],
+    quote:"The copy of me would get on to live after I die... While it might 'know' it is the copy... it won't 'feel' it is the copy and will think it is the original-you's consciousness.",
+    beliefs:{text:"Contested: is consciousness computational (copyable) or embodied (unique)? Ship of Theseus debate.", quote:"The 'individual self' is an illusion; the 'ego-identity' is merely an adaptation evolved for 'cell propagation.'"},
+    tech:{text:"Mind uploading, digital substrate transfer, computational matter.", quote:"We just need to achieve longevity escape velocity. We could be within a couple decades of that."},
+    impl:{text:"Questions of legal personhood, inheritance, what counts as death.", quote:"Mind-uploads are a 'legacy' (like a child) rather than true immortality."}
+  },
+  {
+    id:"moral", label:"Posthuman Moral Progress", x:70, y:68,
+    tags:["emancipatory","contingent"],
+    quote:"The posthuman that will come... will respect and aid a fellow being, no matter their race, gender, sex, augmentation level or even views.",
+    beliefs:{text:"Transhumanism as moral philosophy: augmentation enables ethical advancement, not just capability.", quote:"[Transhumanism posits] the possibility and desirability of fundamentally improving the human condition through applied reason."},
+    tech:{text:"Cognitive augmentation, empathy-enhancing technologies, collective intelligence systems.", quote:"We've reached a point where more resources are available to bring to the masses a far more solid and substantial concept of transhumanism."},
+    impl:{text:"Equality and inclusion framed as design requirements for augmentation.", quote:"Transhumanists believe people should be equal and no one left behind because of lack of money."}
+  },
+  {
+    id:"diy", label:"Grassroots Augmentation", x:62, y:75,
+    tags:["emancipatory","contingent"],
+    quote:"I chose to do it myself instead of finding a body piercer... I utterly respect the DIY ethos of the biopunk movement.",
+    beliefs:{text:"Individual autonomy over the body. Technology as means for self-determined improvement.", quote:"I wanted complete control over the procedure including use of anesthetic, the type of implant, and placement."},
+    tech:{text:"Subcutaneous implants, biocompatible magnets, NFC chips, DIY biosensors.", quote:"Use of 'titanium nitride' or glass encasement to prevent rejection and degradation."},
+    impl:{text:"Bottom-up experimentation as alternative to corporate development. Community self-governance.", quote:"If we don't get involved in the political and policy-making process, we leave those decisions to people who may not understand the true potential (or risks)."}
+  },
+  {
+    id:"governed", label:"Governed Augmentation", x:55, y:70,
+    tags:["emancipatory","contingent"],
+    quote:"If we don't get involved in the political and policy-making process, we leave those decisions to people who may not understand the true potential (or risks).",
+    beliefs:{text:"Technology is shapeable through collective action. Augmentation trajectories depend on governance.", quote:"AI safety research could further postpone the development of ASI... wait until robust alignment has been figured out."},
+    tech:{text:"All augmentation technologies — vision is governance-agnostic regarding specific tech.", quote:"The threat of lawsuits will ensure that the Genie stays in the bottle."},
+    impl:{text:"Active calls for political participation, regulatory engagement, democratic governance.", quote:"Dynamic management of Universal Basic Income by 'semi-independent boards.'"}
+  },
+  {
+    id:"gov-control", label:"Government Control", x:22, y:20,
+    tags:["apocalyptic","inevitable"],
+    quote:"It is very likely that a UBI would be used as a ball and chain to keep people in line, with the threat of being denied your UBI as a deterrent to do anything a ruling party doesn't like.",
+    beliefs:{text:"States inevitably expand surveillance. Sufficiently revolutionary technology will be abused.", quote:"Every technology that is sufficiently revolutionary enough to be abused will be abused."},
+    tech:{text:"Microchip implants, GPS tracking, surveillance AI, UBI as control mechanism.", quote:"Government will simply have no choice but to spy on every individual."},
+    impl:{text:"Calls for decentralized governance, but skepticism about effectiveness under state overreach.", quote:"It is by now inevitable that government will decide how many children you can have and when."}
+  },
+  {
+    id:"species-ineq", label:"Species-Level Inequality", x:18, y:30,
+    tags:["apocalyptic","inevitable"],
+    quote:"Separate conscious life forms of human origin [would become] separate species based on differences in DNA, use of cyberware and brain computer interfaces.",
+    beliefs:{text:"Capitalism inherently concentrates benefits. Augmentation follows existing wealth gradients.", quote:"Capitalism inherently, automatically benefits some more than others: the rich elites getting demonically wealthy and all the rest being piss poor."},
+    tech:{text:"Genetic engineering (CRISPR), cyberware, BCIs — technologies with high cost barriers.", quote:"Separate species based on differences in DNA, use of cyberware and brain computer interfaces."},
+    impl:{text:"Calls for universal access and anti-discrimination protections for non-augmented individuals.", quote:"We cannot force an extreme shift onto people nor can we consider classic homosapiens as second class citizens."}
+  },
+  {
+    id:"dehumanization", label:"Dehumanization", x:28, y:38,
+    tags:["apocalyptic","inevitable"],
+    quote:"I fear of a world where we are chipped at birth and live our lives as some tool for market research, constantly being watched as they study our diets, hobbies, etc.",
+    beliefs:{text:"Corporate dominance reduces human value to data. Convenience traded for last chunk of privacy.", quote:"Mega-corps like Google/Microsoft/Apple dictate the 'last chunk of privacy' in exchange for 'ultimate convenience.'"},
+    tech:{text:"Microchip implants, always-on biosensors, corporate data analytics infrastructure.", quote:"With every new disorder eliminated, the standard for perfection becomes more oppressive."},
+    impl:{text:"Proposals for mental privacy rights and neural data ownership.", quote:"I fear of a world where we are chipped at birth and live our lives as some tool for market research."}
+  },
+  {
+    id:"obsolescence", label:"Human Obsolescence", x:30, y:25,
+    tags:["apocalyptic","inevitable"],
+    quote:"It is nothing short of foolish to [...] suggest white collar jobs would be protected as mechanization advances infinitely onward.",
+    beliefs:{text:"Technological determinism: progress is always onward. AI surpasses human capability.", quote:"Humans suck, really. We take bathroom breaks, we get tired, we are not always reliable... we are inefficient."},
+    tech:{text:"AGI/ASI, deep machine learning, automation replacing white-collar labor.", quote:"Due to deep machine learning it's now happening to white collar workers who thought they were safe."},
+    impl:{text:"UBI debated as response. Augmentation reframed as defensive necessity for survival.", quote:"Humans either must adapt alongside machinery, becoming cyborgs of a sort; or perish into oblivion."}
+  },
+  {
+    id:"coercion", label:"Coercive Adoption", x:35, y:16,
+    tags:["apocalyptic","inevitable"],
+    quote:"There will be massive societal pressure in the future to get chipped... Some jobs will start requiring a chip so people may get one for their livelihood.",
+    beliefs:{text:"Adoption driven by competitive and institutional pressure, not choice. Refusal means exclusion.", quote:"The general course of technology is ALWAYS onward; you can't just 'not' engage in it."},
+    tech:{text:"Workplace-mandated implants, employment-linked augmentation requirements.", quote:"Some jobs will start requiring a chip so people may get one for their livelihood."},
+    impl:{text:"Calls for regulation preventing coercive augmentation and protecting bodily autonomy.", quote:"We cannot force an extreme shift onto people nor can we consider classic homosapiens as second class citizens."}
+  },
+  {
+    id:"vr-retreat", label:"Virtual Retreat", x:25, y:34,
+    tags:["apocalyptic","inevitable"],
+    quote:"Buildings full of 'nutritional broth' tanks where people reside while living permanently in VR... A complete retreat into VR because the real world has 'nothing to offer.'",
+    beliefs:{text:"Automation renders human effort pointless. Entertainment and porn industry drive inevitable adoption.", quote:"Most people in the world won't give a crap about Orwellian nightmares if they can watch HD porn in their heads."},
+    tech:{text:"Full-dive VR, brain-computer interfaces, life support systems, simulation technology.", quote:"The porn industry are major drivers of technology and VR is the perfect opportunity for them."},
+    impl:{text:"Market forces override individual judgment. Retreat as symptom of meaninglessness, not free choice.", quote:"That uselessness, that stagnation, drives people to murder just to see a more vibrant colour than the vast grey concrete we have all around us."}
+  }
+];
+
+function getColor(tags) {
+  const e = tags.includes("emancipatory"), i = tags.includes("inevitable");
+  if (e && i) return "#3a9a6a";
+  if (e && !i) return "#6a9a3a";
+  if (!e && i) return "#a0505e";
+  return "#a08040";
+}
+
+const plane = document.getElementById("plane");
+const detail = document.getElementById("detail");
+let selectedId = null;
+
+data.forEach(im => {
+  const el = document.createElement("div");
+  el.className = "pt";
+  el.dataset.id = im.id;
+  el.style.left = im.x + "%";
+  el.style.top = im.y + "%";
+
+  const dot = document.createElement("div");
+  dot.className = "dot";
+  dot.style.background = getColor(im.tags);
+  el.appendChild(dot);
+
+  const lbl = document.createElement("div");
+  lbl.className = "lbl";
+  lbl.textContent = im.label;
+  el.appendChild(lbl);
+
+  el.addEventListener("click", () => select(im.id));
+  plane.appendChild(el);
+});
+
+function select(id) {
+  selectedId = id === selectedId ? null : id;
+
+  document.querySelectorAll(".pt").forEach(p => {
+    p.classList.toggle("selected", p.dataset.id === selectedId);
+  });
+
+  if (!selectedId) {
+    detail.innerHTML = '<div class="card"><div class="placeholder-text">Click on a point to explore the underlying dimensions that position each imaginary within the framework.</div></div>';
+    return;
+  }
+
+  const im = data.find(d => d.id === selectedId);
+  const c = getColor(im.tags);
+
+  detail.innerHTML = `
+    <div class="card active-card">
+      <div class="card-title">${im.label}</div>
+      <div class="tags">
+        ${im.tags.map(t => `<span class="tag tag-${t}">${t}</span>`).join("")}
+      </div>
+      <div class="main-quote">"${im.quote}"</div>
+    </div>
+
+    <div class="card">
+      <div class="dim-label">
+        <span class="dim-dot" style="background:#7a60b0"></span>
+        <span style="color:#7a60b0">Foundational Beliefs</span>
+      </div>
+      <div class="dim-text">${im.beliefs.text}</div>
+      <div class="dim-quote" style="border-color:rgba(122,96,176,0.3)">"${im.beliefs.quote}"</div>
+    </div>
+
+    <div class="card">
+      <div class="dim-label">
+        <span class="dim-dot" style="background:#3a8aa0"></span>
+        <span style="color:#3a8aa0">Technological Object &amp; Context</span>
+      </div>
+      <div class="dim-text">${im.tech.text}</div>
+      <div class="dim-quote" style="border-color:rgba(58,138,160,0.3)">"${im.tech.quote}"</div>
+    </div>
+
+    <div class="card">
+      <div class="dim-label">
+        <span class="dim-dot" style="background:#a07830"></span>
+        <span style="color:#a07830">Implications</span>
+      </div>
+      <div class="dim-text">${im.impl.text}</div>
+      <div class="dim-quote" style="border-color:rgba(160,120,48,0.3)">"${im.impl.quote}"</div>
+    </div>
+  `;
+}
+</script>
+
+</body>
+</html>
