@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyborg Imaginaries — Futures Cone</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #ffffff;
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #1a1a1a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+  }
+
+  h1 {
+    font-family: 'Source Serif 4', serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    font-size: 0.82rem;
+    color: #666;
+    margin-bottom: 30px;
+    font-weight: 300;
+  }
+
+  .container {
+    position: relative;
+    width: 820px;
+    height: 780px;
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .tooltip {
+    position: absolute;
+    background: #1a1a1a;
+    color: #fafaf8;
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    max-width: 220px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 10;
+    font-weight: 300;
+  }
+
+  .tooltip strong {
+    font-weight: 500;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .legend {
+    margin-top: 20px;
+    display: flex;
+    gap: 30px;
+    font-size: 0.75rem;
+    color: #555;
+    font-weight: 300;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .legend-swatch {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    opacity: 0.7;
+  }
+
+  .note {
+    margin-top: 16px;
+    font-size: 0.7rem;
+    color: #888;
+    max-width: 720px;
+    text-align: center;
+    line-height: 1.5;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h1>Figure 5. Cyborg Imaginaries</h1>
+<p class="subtitle">A futures-cone representation of augmentation imaginaries in pioneer community discourse</p>
+
+<div class="container">
+  <div class="tooltip" id="tooltip"></div>
+  <svg viewBox="0 0 820 760" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Clipping mask for the elliptical top of the cone -->
+      <clipPath id="ellipseClip">
+        <ellipse cx="410" cy="200" rx="310" ry="160"/>
+      </clipPath>
+      <!-- Inner ellipse clip for inevitable zone -->
+      <clipPath id="innerEllipseClip">
+        <ellipse cx="410" cy="200" rx="140" ry="72"/>
+      </clipPath>
+
+      <linearGradient id="emancGrad" x1="1" y1="0" x2="0" y2="0">
+        <stop offset="0%" stop-color="#2d6a4f" stop-opacity="0.02"/>
+        <stop offset="100%" stop-color="#2d6a4f" stop-opacity="0.10"/>
+      </linearGradient>
+      <linearGradient id="apoGrad" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#9d0208" stop-opacity="0.02"/>
+        <stop offset="100%" stop-color="#9d0208" stop-opacity="0.10"/>
+      </linearGradient>
+    </defs>
+
+    <!-- ========== CONE BODY (below ellipse) ========== -->
+    <!-- Outer cone sides -->
+    <line x1="410" y1="710" x2="100" y2="200" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+    <line x1="410" y1="710" x2="720" y2="200" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3"/>
+
+    <!-- Inner cone sides (inevitable sub-cone) -->
+    <line x1="410" y1="710" x2="270" y2="200" stroke="#ccc" stroke-width="0.5" stroke-dasharray="3,4"/>
+    <line x1="410" y1="710" x2="550" y2="200" stroke="#ccc" stroke-width="0.5" stroke-dasharray="3,4"/>
+
+    <!-- Central axis -->
+    <line x1="410" y1="710" x2="410" y2="40" stroke="#999" stroke-width="0.5" stroke-dasharray="2,4"/>
+
+    <!-- ========== CONDITIONS OF CHANGE ZONE (cone body, between origin and ellipse) ========== -->
+
+    <!-- Dividing line -->
+    <line x1="225" y1="420" x2="595" y2="420" stroke="#ddd" stroke-width="0.7" stroke-dasharray="3,3"/>
+
+    <text x="410" y="540" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#999" letter-spacing="0.5px">CONDITIONS OF CHANGE</text>
+
+    <!-- Conditions of change ovals (neutral gray) -->
+       <ellipse cx="310" cy="440" rx="55" ry="15" fill="#d4ccc4" fill-opacity="0.35" stroke="#aaa" stroke-width="0.6"
+      class="imaginary" data-name="Individual Involvement" data-desc="DIY augmentation, self-implantation, bodily autonomy. Bottom-up condition of change."/>
+    <text x="310" y="440" text-anchor="middle" font-family="IBM Plex Sans" font-size="9.5" font-weight="400" fill="#666" font-style="italic">Individual Choice</text>
+    
+    <ellipse cx="310" cy="470" rx="55" ry="15" fill="#d4ccc4" fill-opacity="0.35" stroke="#aaa" stroke-width="0.6"
+      class="imaginary" data-name="Grassroots Involvement" data-desc="DIY augmentation, self-implantation, bodily autonomy. Bottom-up condition of change."/>
+    <text x="310" y="474" text-anchor="middle" font-family="IBM Plex Sans" font-size="9.5" font-weight="400" fill="#666" font-style="italic">Grassroots Involvement</text>
+
+    <ellipse cx="510" cy="470" rx="52" ry="15" fill="#d4ccc4" fill-opacity="0.35" stroke="#aaa" stroke-width="0.6"
+      class="imaginary" data-name="Geopolitical Competition" data-desc="Nations competing via augmentation. Structural condition pushing toward inevitability."/>
+    <text x="510" y="474" text-anchor="middle" font-family="IBM Plex Sans" font-size="9.5" font-weight="400" fill="#666" font-style="italic">Geopolitical competition</text>
+
+    <ellipse cx="460" cy="500" rx="42" ry="13" fill="#d4ccc4" fill-opacity="0.3" stroke="#aaa" stroke-width="0.5"
+      class="imaginary" data-name="Regulatory Mechanisms" data-desc="Entertainment, consumer demand driving adoption."/>
+    <text x="460" y="504" text-anchor="middle" font-family="IBM Plex Sans" font-size="9.5" font-weight="400" fill="#666" font-style="italic">Regulatory Mechanisms</text>
+
+    <ellipse cx="350" cy="500" rx="45" ry="13" fill="#d4ccc4" fill-opacity="0.3" stroke="#aaa" stroke-width="0.5"
+      class="imaginary" data-name="Technological Advancements" data-desc="CRISPR + nanorobots + BCI + AGI as mutually reinforcing."/>
+    <text x="350" y="504" text-anchor="middle" font-family="IBM Plex Sans" font-size="9.5" font-weight="400" fill="#666" font-style="italic">Tech Advancements</text>
+
+    <ellipse cx="415" cy="440" rx="52" ry="13" fill="#d4ccc4" fill-opacity="0.3" stroke="#aaa" stroke-width="0.5"
+      class="imaginary" data-name="Societal Normalization" data-desc="Chips for safety, employment requirements."/>
+    <text x="415" y="444" text-anchor="middle" font-family="IBM Plex Sans" font-size="9.5" font-weight="400" fill="#666" font-style="italic">Societal normalization</text>
+
+    <!-- Singularity — center, inevitable -->
+    <ellipse cx="415" cy="475" rx="40" ry="15" fill="#8B7355" fill-opacity="0.16" stroke="#8B7355" stroke-width="1" stroke-opacity="0.35"
+      class="imaginary" data-name="Technological Singularity" data-desc="Intellectual event horizon. Both hopeful and terrifying. Increasingly inevitable."/>
+    <text x="415" y="475" text-anchor="middle" font-family="IBM Plex Sans" font-size="9.5" font-weight="400" fill="#5c4a30" font-style="italic">Singularity</text>
+
+    <!-- ========== ELLIPTICAL TOP OF CONE — IMAGINED FUTURES ========== -->
+
+    <!-- Emancipatory half fill (left) -->
+    <ellipse cx="410" cy="200" rx="310" ry="160" fill="none"/>
+    <path d="M 410,40 A 310,160 0 0,0 410,360 Z" fill="url(#emancGrad)"/>
+    <!-- Apocalyptic half fill (right) -->
+    <path d="M 410,40 A 310,160 0 0,1 410,360 Z" fill="url(#apoGrad)"/>
+
+    <!-- Outer ellipse stroke -->
+    <ellipse cx="410" cy="200" rx="310" ry="160" fill="none" stroke="#bbb" stroke-width="1.2"/>
+
+    <!-- Inner ellipse (inevitable zone) -->
+    <ellipse cx="410" cy="200" rx="140" ry="72" fill="none" stroke="#ccc" stroke-width="0.7" stroke-dasharray="3,4"/>
+
+    <!-- Cross-hair: horizontal axis (emancipatory–apocalyptic) -->
+    <line x1="100" y1="200" x2="720" y2="200" stroke="#ccc" stroke-width="0.5" stroke-dasharray="2,3"/>
+
+    <!-- ========== AXIS LABELS ========== -->
+    <!-- Emancipatory / Apocalyptic -->
+    <text x="105" y="190" text-anchor="start" font-family="Source Serif 4" font-size="13" font-weight="600" fill="#2d6a4f">Emancipatory</text>
+    <text x="715" y="190" text-anchor="end" font-family="Source Serif 4" font-size="13" font-weight="600" fill="#9d0208">Apocalyptic</text>
+
+    <!-- Inevitable (inner ellipse label) -->
+    <text x="410" y="145" text-anchor="middle" font-family="IBM Plex Sans" font-size="9" font-weight="500" fill="#666">INEVITABLE</text>
+
+    <!-- Contingent (outer zone labels) -->
+    <text x="175" y="105" text-anchor="middle" font-family="IBM Plex Sans" font-size="8.5" font-weight="400" fill="#888">CONTINGENT</text>
+    <text x="645" y="105" text-anchor="middle" font-family="IBM Plex Sans" font-size="8.5" font-weight="400" fill="#888">CONTINGENT</text>
+
+    <!-- Top label -->
+    <text x="410" y="30" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#888" letter-spacing="0.5px">IMAGINED FUTURES</text>
+
+    <!-- ========== IMAGINED FUTURES on the ellipse ========== -->
+
+    <!-- Cognitive Expansion — emancipatory, contingent (outer, left) -->
+    <ellipse cx="210" cy="130" rx="58" ry="18" fill="#2d6a4f" fill-opacity="0.18" stroke="#2d6a4f" stroke-width="1" stroke-opacity="0.4"
+      class="imaginary" data-name="Cognitive Expansion" data-desc="Expanded consciousness, deeper philosophies and sciences. Emancipatory, contingent."/>
+    <text x="210" y="134" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#1a4d38">Cognitive expansion</text>
+
+    <!-- Moral Progress — emancipatory, very contingent (outer edge, left) -->
+    <ellipse cx="165" cy="230" rx="45" ry="15" fill="#2d6a4f" fill-opacity="0.12" stroke="#2d6a4f" stroke-width="0.7" stroke-opacity="0.25"
+      class="imaginary" data-name="Posthuman Moral Progress" data-desc="Posthumans respecting all beings. Emancipatory, highly contingent."/>
+    <text x="165" y="230" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#1a4d38">Moral progress</text>
+
+    <!-- Superhuman Abilities — emancipatory, mid-range -->
+    <ellipse cx="270" cy="270" rx="50" ry="16" fill="#2d6a4f" fill-opacity="0.14" stroke="#2d6a4f" stroke-width="0.8" stroke-opacity="0.3"
+      class="imaginary" data-name="Superhuman Abilities" data-desc="Telekinetic, telepathic abilities through BCIs. Emancipatory."/>
+    <text x="270" y="274" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#1a4d38">Superhuman abilities</text>
+
+    <!-- Climate Manipulation — emancipatory, more inevitable (inner zone, left) -->
+    <ellipse cx="330" cy="210" rx="48" ry="15" fill="#2d6a4f" fill-opacity="0.14" stroke="#2d6a4f" stroke-width="0.8" stroke-opacity="0.3"
+      class="imaginary" data-name="Climate Manipulation" data-desc="Regulating planetary temperature. Emancipatory, framed as necessary."/>
+    <text x="330" y="214" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#1a4d38">Climate manipulation</text>
+
+    <!-- Digital Immortality — spans emancipatory to apocalyptic, contingent -->
+    <ellipse cx="390" cy="95" rx="80" ry="15" fill="#8B7355" fill-opacity="0.16" stroke="#8B7355" stroke-width="1" stroke-opacity="0.4"
+      class="imaginary" data-name="Digital Immortality" data-desc="True continuity or mere facsimile? Spans emancipatory–apocalyptic."/>
+    <text x="390" y="99" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#5c4a30">Digital immortality</text>
+
+    <!-- Collective Integration — spans full range, contingent -->
+    <ellipse cx="410" cy="65" rx="95" ry="15" fill="#8B7355" fill-opacity="0.18" stroke="#8B7355" stroke-width="1" stroke-opacity="0.4"
+      class="imaginary" data-name="Collective Integration" data-desc="End of corruption — or loss of individuality. Most contested imaginary."/>
+    <text x="410" y="69" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#5c4a30">Collective integration</text>
+
+    
+    <!-- Automated Economy — spans both, inner zone -->
+    <ellipse cx="440" cy="165" rx="55" ry="15" fill="#8B7355" fill-opacity="0.13" stroke="#8B7355" stroke-width="0.8" stroke-opacity="0.3"
+      class="imaginary" data-name="Automated Economy" data-desc="UBI as liberation or control mechanism. Contested across both axes."/>
+    <text x="440" y="169" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#5c4a30">Automated economy</text>
+
+    <!-- Government Surveillance — apocalyptic, spans inevitable to contingent -->
+    <ellipse cx="560" cy="175" rx="45" ry="15" fill="#9d0208" fill-opacity="0.1" stroke="#9d0208" stroke-width="0.8" stroke-opacity="0.3"
+      class="imaginary" data-name="Government Surveillance" data-desc="Spying on everyone, UBI as control. Apocalyptic, debated as inevitable or preventable."/>
+    <text x="560" y="172" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">Government</text>
+    <text x="560" y="183" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">surveillance</text>
+
+    <!-- Coercive Adoption — apocalyptic, more inevitable (inner, right) -->
+    <ellipse cx="500" cy="225" rx="45" ry="15" fill="#9d0208" fill-opacity="0.14" stroke="#9d0208" stroke-width="0.8" stroke-opacity="0.35"
+      class="imaginary" data-name="Coercive Adoption" data-desc="Jobs requiring chips, societal pressure. Apocalyptic, increasingly inevitable."/>
+    <text x="500" y="229" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">Coercive adoption</text>
+
+    <!-- Human Obsolescence — apocalyptic, inevitable (inner, right) -->
+    <ellipse cx="480" cy="255" rx="42" ry="14" fill="#9d0208" fill-opacity="0.16" stroke="#9d0208" stroke-width="0.8" stroke-opacity="0.35"
+      class="imaginary" data-name="Human Obsolescence" data-desc="White-collar jobs disappearing. Apocalyptic, near-inevitable."/>
+    <text x="480" y="255" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">Obsolescence</text>
+
+    <!-- Social Calcification — apocalyptic, inevitable -->
+    <ellipse cx="510" cy="280" rx="42" ry="13" fill="#9d0208" fill-opacity="0.12" stroke="#9d0208" stroke-width="0.7" stroke-opacity="0.3"
+      class="imaginary" data-name="Social Calcification" data-desc="Elites living forever, wealth concentration. Apocalyptic."/>
+    <text x="510" y="280" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">Social calcification</text>
+
+    <!-- Species-Level Inequality — apocalyptic, contingent (outer, right) -->
+    <ellipse cx="580" cy="120" rx="52" ry="16" fill="#9d0208" fill-opacity="0.12" stroke="#9d0208" stroke-width="0.7" stroke-opacity="0.3"
+      class="imaginary" data-name="Species-Level Inequality" data-desc="Homo sapiens vs. Homo technicus. Apocalyptic, contingent."/>
+    <text x="580" y="124" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">Species inequality</text>
+
+    <!-- Virtual Retreat — apocalyptic, contingent (outer, right) -->
+    <ellipse cx="630" cy="155" rx="45" ry="14" fill="#9d0208" fill-opacity="0.1" stroke="#9d0208" stroke-width="0.7" stroke-opacity="0.25"
+      class="imaginary" data-name="Virtual Retreat" data-desc="Nutritional broth tanks, permanent VR. Apocalyptic, stagnation-driven."/>
+    <text x="630" y="159" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">Virtual retreat</text>
+
+    <!-- Existential Decline — apocalyptic, contingent -->
+    <ellipse cx="640" cy="220" rx="62" ry="13" fill="#9d0208" fill-opacity="0.1" stroke="#9d0208" stroke-width="0.6" stroke-opacity="0.2"
+      class="imaginary" data-name="Existential Decline" data-desc="Dreams become pointless, humans as pets. Apocalyptic."/>
+    <text x="640" y="224" text-anchor="middle" font-family="IBM Plex Sans" font-size="10" font-weight="400" fill="#6d0106">Existential decline</text>
+
+    <!-- ========== FOUNDATIONAL BELIEFS near origin ========== -->
+    <rect x="325" y="706" width="170" height="26" rx="3" fill="#1a1a1a"/>
+    <text x="410" y="723" text-anchor="middle" font-family="IBM Plex Sans" font-size="11" font-weight="500" fill="#fafaf8">Foundational Beliefs</text>
+
+    <text x="330" y="665" font-family="IBM Plex Sans" font-size="10.5" fill="#999" font-style="italic">Mechanistic body</text>
+    <text x="310" y="679" font-family="IBM Plex Sans" font-size="10.5" fill="#999" font-style="italic">Tech determinism</text>
+    <text x="450" y="665" font-family="IBM Plex Sans" font-size="10.5" fill="#999" font-style="italic">Biological complexity</text>
+    <text x="460" y="679" font-family="IBM Plex Sans" font-size="10.5" fill="#999" font-style="italic">Capitalist critique</text>
+    <text x="365" y="693" font-family="IBM Plex Sans" font-size="10.5" fill="#999" font-style="italic">Transhumanist orientation</text>
+
+  </svg>
+</div>
+
+<div class="legend">
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #2d6a4f;"></div>
+    <span>Emancipatory-leaning</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #9d0208;"></div>
+    <span>Apocalyptic-leaning</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #8B7355;"></div>
+    <span>Contested across axes</span>
+  </div>
+  <div class="legend-item">
+    <div class="legend-swatch" style="background: #d4ccc4;"></div>
+    <span style="font-style: italic;">Conditions of change</span>
+  </div>
+</div>
+
+<p class="note">
+  The ellipse represents the opening of the futures cone. The inner ellipse marks the boundary of futures framed as more inevitable; 
+  the outer zone contains futures framed as more contingent. Oval span reflects the degree of contestation within the discourse. 
+  Imaginaries are not fixed at specific positions; their placement reflects tendencies observed in the data.
+</p>
+
+<script>
+  const tooltip = document.getElementById('tooltip');
+  const imaginaries = document.querySelectorAll('.imaginary');
+
+  imaginaries.forEach(el => {
+    el.style.cursor = 'pointer';
+    el.addEventListener('mouseenter', (e) => {
+      const name = el.dataset.name;
+      const desc = el.dataset.desc;
+      tooltip.innerHTML = `<strong>${name}</strong>${desc}`;
+      tooltip.style.opacity = '1';
+      el.style.filter = 'brightness(0.85)';
+    });
+
+    el.addEventListener('mousemove', (e) => {
+      const container = document.querySelector('.container');
+      const rect = container.getBoundingClientRect();
+      tooltip.style.left = (e.clientX - rect.left + 12) + 'px';
+      tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+    });
+
+    el.addEventListener('mouseleave', () => {
+      tooltip.style.opacity = '0';
+      el.style.filter = '';
+    });
+  });
+</script>
+
+</body>
+</html>
